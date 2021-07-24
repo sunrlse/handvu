@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+    <button id="btn">change</button>
+    <script src="./dep.js"></script>
+    <script src="./watcher.js"></script>
+    <script src="./sg.js"></script>
+    <script>
+        function change() {
+            let num = Math.floor(Math.random() * 10)
+            let msg = 'It is a punishment ' + num
+            sg.title = 'SG ' + num
+            sg.msg = msg
+            // ! 以上两处赋值，会触发两次 update开始一连串操作
+        }
+        const sg = new SG({
+            target: 'app',
+            data: {
+                // title: 'SG',
+                name: 'enjo',
+                msg: 'It is a punishment'
+            },
+            /**
+             * <div>{{name}}</div>
+             * <h3>{{title}}</h3>
+                <div>{{nw}}</div>
+            */
+            template: `<div>
+                
+                <div>{{nw}}</div>
+                <p>{{msg}}</p>
+            </div>`,
+            watch: {
+                msg: function(val, old) {
+                    console.log('user watch 用户watcher 回调执行 ', val, old)
+                }
+            },
+            computed: {
+                nw: function() {
+                    return this.name + ' -+-+-+-+-+-+-+- ' + this.msg
+                }
+            }
+        })
+        const btn = document.getElementById('btn')
+        btn.addEventListener('click', () => {
+            change()
+        })
+    </script>
+</body>
+</html>
